@@ -1,24 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter } from "react-router-dom";
 import './App.css';
 
+import PixlyApi from "./Api.js"
+
+interface imagesI {
+  image_url: string;
+  //FILL THIS OUT WITH WHAT MATCHES DB!!!!
+
+}
+
 function App() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [imageData, setImageData] = useState<imagesI[]>([]);
+
+  console.log("What is imageData?", imageData);
+
+  useEffect(function getImagesDataOnMount() {
+    async function getImagesData() {
+      let allImageData = await PixlyApi.getImages();
+      setImageData(allImageData.images);
+      setIsLoading(false)
+    }
+    getImagesData()
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <p>Loading &hellip;</p>;
+  }
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+      {imageData.map(i=><img src={i.image_url}/>)}
+      </BrowserRouter>
     </div>
   );
 }
