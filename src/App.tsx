@@ -3,7 +3,8 @@ import { BrowserRouter } from "react-router-dom";
 import './App.css';
 
 import PixlyApi from "./Api.js"
-
+import NavBar from "./NavBar";
+import UploadImageForm from "./UploadImageForm";
 interface imagesI {
   image_url: string;
   //FILL THIS OUT WITH WHAT MATCHES DB!!!!
@@ -25,15 +26,24 @@ function App() {
     getImagesData()
   }, [isLoading]);
 
+  
+  async function uploadPhoto(){
+    //TODO
+    
+  }
+
   if (isLoading) {
     return <p>Loading &hellip;</p>;
   }
 
-
   return (
     <div className="App">
       <BrowserRouter>
-      {imageData.map(i=><img src={i.image_url}/>)}
+        <NavBar />
+        <main>
+          <UploadImageForm/>
+          {imageData.map((i, idx) => <img key={idx} src={i.image_url} />)}
+        </main>
       </BrowserRouter>
     </div>
   );
