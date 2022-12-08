@@ -67,8 +67,8 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
     async function handleSubmit(evt: React.FormEvent) {
         evt.preventDefault();
         try {
-            const result = await onSubmit(formData);
-            navigate('/');
+            const result = await onSubmit(formData, selectedFile);
+            //navigate('/');
             console.log("success, result is", result);
         }
         catch (err) {

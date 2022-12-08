@@ -27,9 +27,13 @@ function App() {
   }, [isLoading]);
 
   
-  async function uploadPhoto(){
-    //TODO
-    
+  async function uploadPhoto(formData, selectedFile){
+    console.log(formData);
+    console.log(selectedFile);
+
+    const result = await PixlyApi.uploadImage(selectedFile,formData);
+    console.log("what is result of submission", result);
+    setIsLoading(true);
   }
 
   if (isLoading) {
@@ -41,7 +45,7 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <main>
-          <UploadImageForm/>
+          <UploadImageForm onSubmit={uploadPhoto}/>
           {imageData.map((i, idx) => <img key={idx} src={i.image_url} />)}
         </main>
       </BrowserRouter>
