@@ -5,33 +5,55 @@ import './App.css';
 import PixlyApi from "./Api.js"
 import NavBar from "./NavBar";
 import UploadImageForm from "./UploadImageForm";
+import DisplayImageMini from "./DisplayImageMini"
+
 interface imagesI {
   image_url: string;
-  //FILL THIS OUT WITH WHAT MATCHES DB!!!!
+  title: string;
+  description: string;
+  uploaded_by: string;
+  //TODO: FILL THIS OUT WITH WHAT MATCHES DB!!!!
 
 }
 
+/**
+ *  Renders the Pixly App component
+ * 
+ *  State: isLoading: (bool)
+ *         imagesData: [{imageData}, ...]
+ *         where imageData is:
+ *            {
+ *              image_url,
+ *              title,
+ *              description,
+ *              uploadedBy
+ *            }
+ *  Props: none
+ * 
+ *  App -> RoutesList
+ */
+
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [imageData, setImageData] = useState<imagesI[]>([]);
+  const [imagesData, setImagesData] = useState<imagesI[]>([]);
 
-  console.log("What is imageData?", imageData);
+  console.log("What is imagesData?", imagesData);
 
   useEffect(function getImagesDataOnMount() {
     async function getImagesData() {
       let allImageData = await PixlyApi.getImages();
-      setImageData(allImageData.images);
+      setImagesData(allImageData.images);
       setIsLoading(false)
     }
     getImagesData()
   }, [isLoading]);
 
-  
-  async function uploadPhoto(formData, selectedFile){
+
+  async function uploadPhoto(formData, selectedFile) {
     console.log(formData);
     console.log(selectedFile);
 
-    const result = await PixlyApi.uploadImage(selectedFile,formData);
+    const result = await PixlyApi.uploadImage(selectedFile, formData);
     console.log("what is result of submission", result);
     setIsLoading(true);
   }
@@ -45,8 +67,8 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <main>
-          <UploadImageForm onSubmit={uploadPhoto}/>
-          {imageData.map((i, idx) => <img key={idx} src={i.image_url} />)}
+          <UploadImageForm onSubmit={uploadPhoto} />
+          <DisplayImageMini imagesData={imagesData}/>
         </main>
       </BrowserRouter>
     </div>

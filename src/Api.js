@@ -1,13 +1,27 @@
+/**
+ * PixlyApi class for making requests to the server
+ */
+
 import axios from 'axios';
 
 const BASE_API_URL = "http://localhost:3001";
 
 class PixlyApi {
+
+   /**
+    * Makes a request to the server for all images data in the DB
+    * 
+    * Returns an array of the images data
+    */
    static async getImages() {
       const result = await axios.get(`${BASE_API_URL}/images`);
       return result.data;
    }
 
+   /**
+    * Accepts image and form data, submits to server
+    * 
+    */
    static async uploadImage(fileData, formData) {
       const { title, imageUrl, uploadedBy, description } = formData;
       

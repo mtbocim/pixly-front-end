@@ -19,6 +19,7 @@ interface FormDataI {
             }
  * 
  *        errors: str (error message)
+ *        selectedFile: file selected for upload (type:??)
  *
  * Props: onSubmit (callback function)
  *
@@ -71,7 +72,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
             //navigate('/');
             console.log("success, result is", result);
         }
-        catch (err) {
+        catch (err:any) {
 
             //console.log("err>>>>>>>>>>>>", err);
             setErrors(err.message)

@@ -1,0 +1,14 @@
+.DisplayImageMini{
+    width: 90vw;
+    display: flex
+}
+
+.DisplayImageMini-image{
+    width: 10%;
+    height: auto;
+    margin: 20px;
+}
+
+.DisplayImageMini img{
+    width:100%;
+}
