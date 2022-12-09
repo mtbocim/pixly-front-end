@@ -36,7 +36,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
         }
     );
 
-    const [selectedFile, setSelectedFile] = useState('');
+    const [selectedFile, setSelectedFile] = useState<File|''>('');
     const [errors, setErrors] = useState();
 
     const navigate = useNavigate();
@@ -52,13 +52,14 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
         }));
     }
 
-    function handleFileSelect(evt){
+    function handleFileSelect(evt:React.ChangeEvent<HTMLInputElement>){
         console.log("what is file stuff", evt.target.files)
+        
         setSelectedFile(evt.target.files[0])
     }
 
     const formKeys:string[] = Object.keys(formData);
-    const isDisable = formKeys.some(key => formData[key] === '')
+    const isDisable = formKeys.some(key => formData[key as keyof FormDataI] === '')
 
     /**
      * Waits for a successful formData submission and then navigates to '/'
@@ -69,7 +70,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
         evt.preventDefault();
         try {
             const result = await onSubmit(formData, selectedFile);
-            //navigate('/');
+            navigate('/');
             console.log("success, result is", result);
         }
         catch (err:any) {

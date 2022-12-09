@@ -4,8 +4,6 @@ import './App.css';
 
 import PixlyApi from "./Api.js"
 import NavBar from "./NavBar";
-import UploadImageForm from "./UploadImageForm";
-import DisplayImageMini from "./DisplayImageMini";
 import RoutesList from './RoutesList';
 import imageDataContext from './imageDataContext';
 
@@ -44,14 +42,20 @@ function App() {
   useEffect(function getImagesDataOnMount() {
     async function getImagesData() {
       let allImageData = await PixlyApi.getImages();
-      setImagesData(allImageData.images);
+      setImagesData(() => allImageData.images);
       setIsLoading(false)
     }
     getImagesData()
   }, [isLoading]);
 
 
-  async function uploadPhoto(formData, selectedFile) {
+  async function uploadPhoto(
+    formData: {
+      title: string;
+      description: string;
+      uploadedBy: string;
+    },
+    selectedFile: Buffer) {
     console.log(formData);
     console.log(selectedFile);
 
@@ -70,7 +74,7 @@ function App() {
         <BrowserRouter>
           <NavBar />
           <main>
-            <RoutesList uploadPhoto={uploadPhoto}/>
+            <RoutesList uploadPhoto={uploadPhoto} />
           </main>
         </BrowserRouter>
       </div>
