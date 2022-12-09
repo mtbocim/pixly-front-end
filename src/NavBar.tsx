@@ -22,9 +22,9 @@ function NavBar() {
             </Link>
             <Nav className="ms-auto" navbar>
                <NavItem>
-                  <NavLink to="">Link 1</NavLink>
-                  <NavLink to="">Link 2</NavLink>
-                  <NavLink to="">Link 3</NavLink>
+                  <NavLink to="/">Pixly Home</NavLink>
+                  <NavLink to="/upload-image">Upload new image!</NavLink>
+                  <NavLink to="edit-image">Edit an image!</NavLink>
                </NavItem>
             </Nav>
          </div>

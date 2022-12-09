@@ -5,7 +5,9 @@ import './App.css';
 import PixlyApi from "./Api.js"
 import NavBar from "./NavBar";
 import UploadImageForm from "./UploadImageForm";
-import DisplayImageMini from "./DisplayImageMini"
+import DisplayImageMini from "./DisplayImageMini";
+import RoutesList from './RoutesList';
+import imageDataContext from './imageDataContext';
 
 interface imagesI {
   image_url: string;
@@ -63,15 +65,16 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <BrowserRouter>
-        <NavBar />
-        <main>
-          <UploadImageForm onSubmit={uploadPhoto} />
-          <DisplayImageMini imagesData={imagesData}/>
-        </main>
-      </BrowserRouter>
-    </div>
+    <imageDataContext.Provider value={imagesData}>
+      <div className="App">
+        <BrowserRouter>
+          <NavBar />
+          <main>
+            <RoutesList uploadPhoto={uploadPhoto}/>
+          </main>
+        </BrowserRouter>
+      </div>
+    </imageDataContext.Provider>
   );
 }
 

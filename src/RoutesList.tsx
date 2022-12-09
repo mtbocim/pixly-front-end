@@ -1,27 +1,36 @@
 import { Route, Routes } from "react-router-dom";
 import React, { useContext } from "react";
 
+import Home from "./Home";
+import UploadImageForm from "./UploadImageForm";
+import ImageEditForm from './ImageEditForm'
 /**
  * Renders RoutesList component
  * 
  * State: //TODO: ?
  * Props: //TODO: ?
+ * 
+ * App -> RoutesList -> TitleCard
+ *                      DisplayImageMini
  */
 
-function RoutesList(){
+function RoutesList({uploadPhoto}:{uploadPhoto:Function}) {
     //TODO: context or state?
 
     return (
-        <div className = "RoutesList">
+        <div className="RoutesList">
             <Routes>
-            <Route path="" element={''} />
-            
-            <Route path="" element={''} />
+                <Route path="/" element={<Home />} />
+                <Route 
+                    path="/upload-image" 
+                    element={<UploadImageForm onSubmit={uploadPhoto}/>} 
+                />
+                <Route path="/edit-image" element={<ImageEditForm/>} />
 
-         </Routes>
+            </Routes>
         </div>
     )
-    
+
 
 }
 
