@@ -18,7 +18,7 @@ interface imagesI {
 
 /**
  *  Renders the Pixly App component
- * 
+ *
  *  State: isLoading: (bool)
  *         imagesData: [{imageData}, ...]
  *         where imageData is:
@@ -29,7 +29,7 @@ interface imagesI {
  *              uploadedBy
  *            }
  *  Props: none
- * 
+ *
  *  App -> RoutesList
  */
 
@@ -64,6 +64,12 @@ function App() {
     setIsLoading(true);
   }
 
+  async function deleteImage(url: string) {
+    console.log("app", url);
+    await PixlyApi.deleteImage(url);
+    setIsLoading(true);
+  }
+
   if (isLoading) {
     return <p>Loading &hellip;</p>;
   }
@@ -74,7 +80,7 @@ function App() {
         <BrowserRouter>
           <NavBar />
           <main>
-            <RoutesList uploadPhoto={uploadPhoto} />
+            <RoutesList uploadPhoto={uploadPhoto} deleteImage={deleteImage} />
           </main>
         </BrowserRouter>
       </div>

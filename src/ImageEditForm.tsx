@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ImageEditForm.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import ImageFilters from './imageFilters';
 
@@ -12,14 +13,14 @@ interface imageDataI{
 }
 /**
  * Renders an ImageEditForm component
- * 
+ *
  * State: isLoading: (bool)
- *        editedPixelData: pixel data on the canvas element 
+ *        editedPixelData: pixel data on the canvas element
  *              as [r1,g1,b1,s1, ...]
  *        originalImage: <HTMLImageElement> once loaded
  */
 
-function ImageEditForm() {
+function ImageEditForm({deleteImage}:{deleteImage:Function}) {
     const [isLoading, setIsLoading] = useState(true);
     const [editedPixelData, setEditedPixelData] = useState<imageDataI>(
         {
@@ -35,7 +36,13 @@ function ImageEditForm() {
     // console.log("what is originalImage", originalImage?.naturalWidth);
     const nWidth = originalImage?.naturalWidth || 0
     const nHeight = originalImage?.naturalHeight || 0;
-    
+
+    // gets url passed as state from DisplayImageMini
+    const location = useLocation();
+    const { url, title } = location.state;
+
+    const navigate = useNavigate();
+
     useEffect(function setCanvasImageOnMount() {
         async function setCanvasImage() {
             if (originalImage !== undefined && editedPixelData.data === undefined) {
@@ -67,14 +74,21 @@ function ImageEditForm() {
     //get dimension of source file
     //apply one time scale to canvas img display width/actual width
 
+    function handleDeleteImage(){
+        deleteImage(url);
+        navigate('/');
+    }
+
     return (
         <div className='ImageEditForm'>
             <button onClick={makeImageGreyScale}>Grey!</button>
+            <button onClick={handleDeleteImage}>Delete!</button>
             <div className='ImageEditForm-original'>
                 <img
                     id="original-image"
                     // src='./martkov-tacocat.jpg'
-                    src = "https://r28-pixly-app.s3.amazonaws.com/6x997o5ef868e4-c1d4-4049-bfb0-cb5734fca8ad.jpg"
+                    src={url}
+                    alt={title}
                     onLoad={imageIsLoaded}
                     // must be set before image loads
                     crossOrigin="anonymous"
