@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ImageEditForm.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+
 import ImageFilters from './imageFilters';
 
 interface imageDataI{
@@ -74,15 +75,22 @@ function ImageEditForm({deleteImage}:{deleteImage:Function}) {
     //get dimension of source file
     //apply one time scale to canvas img display width/actual width
 
-    function handleDeleteImage(){
-        deleteImage(url);
-        navigate('/');
+    async function handleDeleteImage() {
+        try {
+            const result = await deleteImage(url);
+            navigate('/')
+            console.log("success, result is: ", result)
+        } catch (err: any) {
+            console.log("delete error", err);
+        }
+
     }
 
     return (
         <div className='ImageEditForm'>
             <button onClick={makeImageGreyScale}>Grey!</button>
             <button onClick={handleDeleteImage}>Delete!</button>
+
             <div className='ImageEditForm-original'>
                 <img
                     id="original-image"
@@ -98,7 +106,8 @@ function ImageEditForm({deleteImage}:{deleteImage:Function}) {
             </div>
             <div className='ImageEditForm-canvas' >
                 <canvas id='edit-canvas' width={nWidth} height={nHeight}></canvas>
-            </div>
+                </div>
+
 
         </div>
     );

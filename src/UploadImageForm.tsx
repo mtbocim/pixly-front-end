@@ -17,7 +17,7 @@ interface FormDataI {
                 description: '',
                 uploaded_by: '',
             }
- * 
+ *
  *        errors: str (error message)
  *        selectedFile: file selected for upload (type:??)
  *
@@ -54,7 +54,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
 
     function handleFileSelect(evt:React.ChangeEvent<HTMLInputElement>){
         console.log("what is file stuff", evt.target.files)
-        
+        //TODO: type this
         setSelectedFile(evt.target.files[0])
     }
 
@@ -64,7 +64,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
     /**
      * Waits for a successful formData submission and then navigates to '/'
      * or catches a database request error and set the state of setErrors
-     * for informational display purposes. 
+     * for informational display purposes.
      */
     async function handleSubmit(evt: React.FormEvent) {
         evt.preventDefault();

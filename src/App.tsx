@@ -39,6 +39,7 @@ function App() {
 
   console.log("What is imagesData?", imagesData);
 
+  //TODO: rename onmount
   useEffect(function getImagesDataOnMount() {
     async function getImagesData() {
       let allImageData = await PixlyApi.getImages();

@@ -24,7 +24,7 @@ class PixlyApi {
   static async uploadImage(fileData, formData) {
     const { title, imageUrl, uploadedBy, description } = formData;
 
-    const result = axios.post(
+    const result = await axios.post(
       `${BASE_API_URL}/images`,
       {
         image: fileData,
