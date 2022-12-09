@@ -6,14 +6,15 @@ function ImageEditForm() {
     const [editedPixelData, setEditedPixelData] = useState([]);
     const [originalImage, setOriginalImage] = useState(undefined);
     console.log("what is editedPixelData", editedPixelData);
-
-
+    console.log("what is originalImage", originalImage?.naturalWidth);
+    const nWidth = originalImage?.naturalWidth || 0
+    const nHeight = originalImage?.naturalHeight || 0;
     useEffect(function setCanvasImageOnMount() {
         async function setCanvasImage() {
             if (originalImage !== undefined) {
                 const canvas = document.getElementById("edit-canvas");
                 const context = canvas.getContext('2d');
-                
+                context.scale(originalImage.clientWidth/nWidth, originalImage.clientHeight/nHeight);
                 context.drawImage(originalImage, 0, 0);
 
                 let imgData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -25,16 +26,16 @@ function ImageEditForm() {
     }, [originalImage])
 
     function imageIsLoaded(){
+        let image = document.getElementById("original-image")
+        console.log(image);
         setOriginalImage(document.getElementById("original-image"));
     }
-    //state of original image currently in the canvas
-    //state of what the edited image pixel data is
-
-    //useEffect that populates the canvas with imagePixelData as
-    //dependancy
 
     //function to convert to greyscale
     //reset function back to original state (bring in as prop)
+
+    //get dimension of source file
+    //apply one time scale to canvas img display width/actual width
 
     return (
         <div className='ImageEditForm'>
@@ -48,7 +49,7 @@ function ImageEditForm() {
                 </img>
             </div>
             <div className='ImageEditForm-canvas' >
-                <canvas id='edit-canvas'></canvas>
+                <canvas id='edit-canvas' width={nWidth} height={nHeight}></canvas>
             </div>
 
         </div>

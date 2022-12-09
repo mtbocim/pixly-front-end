@@ -1,15 +1,7 @@
 .ImageEditForm-original {
-    width: 300px;
-}
-
-.ImageEditForm-canvas {
-    width:400px;
+    width: 400px;
 }
 
 .ImageEditForm img {
-    width:90%;
-}
-
-.ImageEditForm canvas{
     width:90%;
 }
