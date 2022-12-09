@@ -59,7 +59,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
     }
 
     const formKeys:string[] = Object.keys(formData);
-    const isDisable = formKeys.some(key => formData[key as keyof FormDataI] === '')
+    const isDisabled = formKeys.some(key => formData[key as keyof FormDataI] === '')
 
     /**
      * Waits for a successful formData submission and then navigates to '/'
@@ -131,7 +131,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
                                     />
                                 </label>
                             </div>
-                            <button disabled={isDisable}>Submit!</button>
+                            <button disabled={isDisabled}>Submit!</button>
                         </form>
                     </label>
                     <p className='UploadImageForm-errors'>{errors}</p>

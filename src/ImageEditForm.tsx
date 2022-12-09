@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './ImageEditForm.css';
 
+import ImageFilters from './imageFilters';
+
 interface imageDataI{
     data:any;
     colorSpace:any;
@@ -37,11 +39,7 @@ function ImageEditForm() {
     useEffect(function setCanvasImageOnMount() {
         async function setCanvasImage() {
             if (originalImage !== undefined && editedPixelData.data === undefined) {
-                const canvas = document.getElementById("edit-canvas") as HTMLCanvasElement;
-                const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-                context.scale(originalImage.clientWidth / nWidth, originalImage.clientHeight / nHeight);
-                context.drawImage(originalImage, 0, 0);
-                let imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const imgData = ImageFilters.setInitialCanvasDisplay(originalImage)
                 setEditedPixelData(imgData)
             }
             setIsLoading(false);
@@ -57,29 +55,10 @@ function ImageEditForm() {
 
     function makeImageGreyScale() {
         // console.log("make grey");
-        // console.log("editPixelData.data", editedPixelData.data)
-        for (let i = 0; i < editedPixelData.data.length; i += 4) {
-        // editedPixelData.data[i] = 0;
-
-            let greyScaleVal =
-                
-                editedPixelData.data[i] +
-                editedPixelData.data[i + 1] +
-                editedPixelData.data[i + 2];
-            greyScaleVal = Math.floor(greyScaleVal / 3);
-            
-            
-            for (let j = 0; j < 3; j++) {
-                editedPixelData.data[i + j] = greyScaleVal;
-            }
-        }
+        const newPixelData = ImageFilters.makeImageGreyScale(editedPixelData)
         console.log(editedPixelData);
-        // console.log("change canvas data", editedPixelData.data)
-        const canvas = document.getElementById("edit-canvas") as HTMLCanvasElement;
-        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.putImageData(editedPixelData, 0, 0);
-        setEditedPixelData(editedPixelData);
+        ImageFilters.setCanvasDisplay(newPixelData)
+        setEditedPixelData(newPixelData);
         setIsLoading(true);
     }
     //function to convert to greyscale
