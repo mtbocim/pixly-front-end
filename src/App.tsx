@@ -36,7 +36,7 @@ interface imagesI {
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [imagesData, setImagesData] = useState<imagesI[]>([]);
-
+  console.log("App rendered");
   console.log("What is imagesData?", imagesData);
 
   //TODO: rename onmount
@@ -50,6 +50,10 @@ function App() {
   }, [isLoading]);
 
 
+  /**
+   * Accepts formData {title, description, uploadedBy} and selected file
+   * as a Buffer object
+   */
   async function uploadPhoto(
     formData: {
       title: string;

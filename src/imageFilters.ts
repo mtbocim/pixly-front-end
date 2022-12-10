@@ -1,5 +1,9 @@
 
 class ImageFilters {
+    
+    /**
+     * Function to convert pixelData to greyscale
+     */
     static makeImageGreyScale(pixelData) {
         console.log("make grey");
 
@@ -18,7 +22,9 @@ class ImageFilters {
         return pixelData;
     }
 
-
+    /**
+     * Draw image on canvas from pixelData
+     */
     static setCanvasDisplay(pixelData) {
         const canvas = document.getElementById("edit-canvas") as HTMLCanvasElement;
         const context = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -27,6 +33,9 @@ class ImageFilters {
 
     }
 
+    /**
+     * Puts data of exising image in dom into the canvas element
+     */
     static setInitialCanvasDisplay(originalImage:HTMLImageElement) {
         const nWidth = originalImage.naturalWidth;
         const nHeight = originalImage.naturalHeight;

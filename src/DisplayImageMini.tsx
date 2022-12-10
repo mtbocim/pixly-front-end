@@ -27,7 +27,7 @@ function DisplayImageMini({ imagesData }: { imagesData: imagesI[] }) {
                     <div key={i.image_url} className="DisplayImageMini-image">
                         <label>
                             Title: {i.title}
-                            <Link to='/edit-image' state={{url: i.image_url, title:i.title}}>
+                            <Link to='/edit-image' state={{ url: i.image_url, title: i.title }}>
                                 <img key={i.image_url} src={i.image_url} alt={i.title} />
                             </Link>
                         </label>

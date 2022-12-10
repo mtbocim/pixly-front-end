@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import ImageFilters from './imageFilters';
 
-interface imageDataI{
-    data:any;
-    colorSpace:any;
+interface imageDataI {
+    data: any;
+    colorSpace: any;
     height: number;
     width: number;
 
@@ -21,17 +21,20 @@ interface imageDataI{
  *        originalImage: <HTMLImageElement> once loaded
  */
 
-function ImageEditForm({deleteImage}:{deleteImage:Function}) {
+function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
+    const location = useLocation();
+    const { url, title } = location.state;
+
     const [isLoading, setIsLoading] = useState(true);
     const [editedPixelData, setEditedPixelData] = useState<imageDataI>(
         {
-            data:undefined,
-            colorSpace:undefined,
-            height:0,
-            width:0,
+            data: undefined,
+            colorSpace: undefined,
+            height: 0,
+            width: 0,
         }
     );
-    const [originalImage, setOriginalImage] = useState<HTMLImageElement|undefined>(undefined);
+    const [originalImage, setOriginalImage] = useState<HTMLImageElement | undefined>(undefined);
 
     //console.log("what is editedPixelData", editedPixelData);
     // console.log("what is originalImage", originalImage?.naturalWidth);
@@ -39,8 +42,6 @@ function ImageEditForm({deleteImage}:{deleteImage:Function}) {
     const nHeight = originalImage?.naturalHeight || 0;
 
     // gets url passed as state from DisplayImageMini
-    const location = useLocation();
-    const { url, title } = location.state;
 
     const navigate = useNavigate();
 
@@ -76,6 +77,7 @@ function ImageEditForm({deleteImage}:{deleteImage:Function}) {
     //apply one time scale to canvas img display width/actual width
 
     async function handleDeleteImage() {
+
         try {
             const result = await deleteImage(url);
             navigate('/')
@@ -88,8 +90,11 @@ function ImageEditForm({deleteImage}:{deleteImage:Function}) {
 
     return (
         <div className='ImageEditForm'>
-            <button onClick={makeImageGreyScale}>Grey!</button>
+
             <button onClick={handleDeleteImage}>Delete!</button>
+
+            <button onClick={makeImageGreyScale}>Grey!</button>
+
 
             <div className='ImageEditForm-original'>
                 <img
@@ -106,7 +111,7 @@ function ImageEditForm({deleteImage}:{deleteImage:Function}) {
             </div>
             <div className='ImageEditForm-canvas' >
                 <canvas id='edit-canvas' width={nWidth} height={nHeight}></canvas>
-                </div>
+            </div>
 
 
         </div>
