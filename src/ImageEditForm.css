@@ -1,15 +1,16 @@
+.imagesDisplay {
+    display: flex;
+    padding: 15px;
+}
+
 .ImageEditForm-original {
-    width: 400px;
+    
     display:flex;
-    margin: 20px;
+    margin:10px;
+    
 }
 
-.ImageEditForm img {
-    width:90%;
-}
-
-.ImageEditForm-canvas{
+.ImageEditForm-edit {
     display:flex;
-    margin:20px;
-
+    margin: 10px;
 }

@@ -20,51 +20,60 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
     // gets url passed as state from DisplayImageMini
     const location = useLocation();
     const { url, title } = location.state;
+
     const [originalImage, setOriginalImage] = useState<ImageBitmap | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true);
+    const [originalPixelData, setOriginalPixelData] = useState<ImageData>(
+        {
+            data: undefined,
+            colorSpace: undefined,
+            height: 0,
+            width: 0,
+        }
+    );
     const [editedPixelData, setEditedPixelData] = useState<ImageData[]>([]);
     const [formData, setFormData] = useState({
         red: 100,
         green: 100,
         blue: 100,
-        contrast: 0,
-        chainFactor: 1
+        contrast: 0
     });
+    // console.log("what is originalData", originalPixelData);
+    // console.log("what is last editedData", editedPixelData[editedPixelData.length - 1]);
+    // console.log("what is formData", formData)
+    // const nWidth = originalImage?.naturalWidth || 0
+    // const nHeight = originalImage?.naturalHeight || 0;
+    // const cWidth = originalImage?.clientWidth || 0;
+    // const cHeight = originalImage?.clientHeight || 0;
+    // const dWidthRatio = nWidth/cWidth || 0;
+    // const dHeightRatio = nHeight/cHeight || 0;
 
-    const [isClicked, setIsClicked] = useState({
-        red: false,
-        blue: false,
-        green: false,
-        contrast: false
-    });
 
+    // console.log("nwidth", nWidth, "nHeight", nHeight, "cWidth", cWidth, "dWidth", dWidthRatio);
 
-    const current = editedPixelData[editedPixelData.length - 1]
-    // console.log("what is original image", originalImage);
-    // console.log("what is edited data 0", editedPixelData[0])
-    // console.log("what is width", originalImage?.width);
-    console.log("what is edited data array", editedPixelData);
-    console.log("What is isClicked", isClicked);
     const navigate = useNavigate();
 
-    useEffect(function setOriginalImageDataOnLoad() {
-        async function setOriginalImageData() {
+    // useEffect(function setCanvasImageOnMount() {
+    //     async function setCanvasImage() {
+    //         console.log("setting canvas image first time only");
+    //         if (originalImage !== undefined && editedPixelData.length === 0) {
+    //             const imgData = ImageProcessing.setInitialCanvasDisplay(originalImage)
+    //             setOriginalPixelData(imgData);
+    //             setEditedPixelData([...editedPixelData, imgData])
+    //         }
+    //         setIsLoading(false);
+    //     }
+    //     setCanvasImage();
+    // }, [originalImage]);
+
+    useEffect(function setOriginalImageDataOnLoad(){
+        async function setOriginalImageData(){
             let result = await ImageProcessing.createOriginalImageData(url);
-            //console.log(result);
             setOriginalImage(result);
             setIsLoading(false);
         }
         setOriginalImageData();
     }, []);
-
-    useEffect(function pageLoaded() {
-        if (!isLoading) {
-            ImageProcessing.displayOriginalImage(originalImage);
-            const imgData = ImageProcessing.createImageDataFromBitmap()
-            ImageProcessing.displayEditedImage(imgData);
-            setEditedPixelData([...editedPixelData, imgData]);
-        }
-    }, [isLoading]);
 
     function handleChange(evt: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = evt.target;
@@ -74,15 +83,11 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
         }));
     }
 
-    function handleClick(evt: React.MouseEvent<HTMLInputElement>) {
-        const { name } = evt.currentTarget;
-        console.log("In handleClick", isClicked[name], evt.currentTarget)
-        setIsClicked((clicked) => ({
-            ...clicked,
-            [name]: !isClicked[name]
-        }))
-
-    }
+    //Set the original image once it has fully loaded
+    // function imageIsLoaded() {
+    //     let image = document.getElementById("original-image") as HTMLImageElement
+    //     setOriginalImage(image);
+    // }
 
     function resetImage() {
         ImageProcessing.displayEditedImage(editedPixelData[0]);
@@ -91,73 +96,46 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
             red: 100,
             green: 100,
             blue: 100,
-            contrast: 0,
-            chainFactor: 1
+            contrast: 0
         });
     }
 
     //Uses original image data and converts to greyscale
     function makeImageGreyScale() {
         const newPixelData =
-            ImageProcessing.makeImageGreyScale(current);
-        updateEditImage(newPixelData);
+            ImageProcessing.makeImageGreyScale(originalPixelData);
+        updateImage(newPixelData);
 
     }
 
-    //Uses original image data and converts the image to sepia
     function makeImageSepia() {
         const newPixelData =
-            ImageProcessing.makeImageSepia(current);
-        updateEditImage(newPixelData);
+            ImageProcessing.makeImageSepia(originalPixelData);
+        updateImage(newPixelData);
     }
 
-    //Applies Markov algorithm with a given chain factor to the image
+
     function makeMartkov() {
-        const chainFactor = Number(formData.chainFactor);
-
-        const pixelChain = Martkov.getPixelChains(current, chainFactor);
-        // console.log("what are the chainzzzzz", pixelChain)
+        const pixelChain = Martkov.getDoublePixelChains(originalPixelData);
+        console.log("what are the chainzzzzz", pixelChain)
         const newPixelData =
-            Martkov.changePixelValues(current, pixelChain, chainFactor);
-        updateEditImage(newPixelData);
-        
-    }
-
-    /**
-     * Uses current image data, gets modified data from 
-     * ImageProcessing.makeImageSorted()
-     * 
-     * Returns updated image data
-     */
-    function makeSorted() {
-        const newPixelData = ImageProcessing.makeImageSorted(current);
-        updateEditImage(newPixelData);
+            Martkov.changeDoublePixelValues(originalPixelData, pixelChain);
+        updateImage(newPixelData);
     }
 
     function updateColors() {
         const { red, green, blue, contrast } = formData;
         const newPixelData =
-            ImageProcessing.changeColors(current, red, green, blue, contrast);
-        updateEditImage(newPixelData);
+            ImageProcessing.changeColors(originalPixelData, red, green, blue, contrast);
+        updateImage(newPixelData);
     }
 
-    function updateEditImage(newPixelData) {
+    function updateImage(newPixelData) {
         const updatedImageData =
-            new ImageData(newPixelData, originalImage.width, originalImage.height, { colorSpace: 'srgb' });
+            new ImageData(newPixelData, nWidth, nHeight, { colorSpace: 'srgb' });
+        console.log("what is updated image", updatedImageData)
         ImageProcessing.displayEditedImage(updatedImageData);
-
-
-        let canUpdate = true;
-        for (let key in isClicked) {
-            if (isClicked[key]) {
-                canUpdate = false;
-                break;
-            }
-        }
-        if (canUpdate) {
-            console.log("did I get here?????????")
-            setEditedPixelData([...editedPixelData, updatedImageData]);
-        }
+        setEditedPixelData([...editedPixelData, updatedImageData]);
     }
 
     async function handleDeleteImage() {
@@ -174,8 +152,6 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
     if (isLoading) {
         return <p>Loading &hellip;</p>;
     }
-
-
     return (
         <div className='ImageEditForm'>
 
@@ -183,38 +159,15 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
             <button onClick={resetImage}>Reset</button>
             <button onClick={makeImageGreyScale}>Grey!</button>
             <button onClick={makeImageSepia}>Sepia!</button>
-            <div>
-
-                <button onClick={makeMartkov}>Martkov!</button>
-                <label>
-                    Chain factor:
-                    <input
-                        type="range"
-                        min="1"
-                        max="5"
-                        name="chainFactor"
-                        value={formData.chainFactor}
-                        onChange={handleChange}
-                        step="1"
-                    >
-                    </input>
-                </label>
-            </div>
-
-            <button onClick={makeSorted}>Sorted Image!</button>
-
+            {/* <button onClick={makeMartkov}>Martkov!</button> */}
             <label>
                 Red %:
                 <input
                     type="range"
                     name="red"
                     value={formData.red}
-                    onMouseDown={handleClick}
-                    onMouseUp={handleClick}
                     onChange={handleChange}
                     onInput={updateColors}
-
-
                     step='5'
                 />
             </label>
@@ -226,8 +179,6 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
                     value={formData.green}
                     onChange={handleChange}
                     onInput={updateColors}
-                    onMouseDown={handleClick}
-                    onMouseUp={handleClick}
                     step='5'
                 />
             </label>
@@ -239,8 +190,6 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
                     value={formData.blue}
                     onChange={handleChange}
                     onInput={updateColors}
-                    onMouseDown={handleClick}
-                    onMouseUp={handleClick}
                     step='5'
                 />
             </label>
@@ -254,25 +203,27 @@ function ImageEditForm({ deleteImage }: { deleteImage: Function }) {
                     max='10'
                     onChange={handleChange}
                     onInput={updateColors}
-                    onMouseDown={handleClick}
-                    onMouseUp={handleClick}
                 />
             </label>
             <div className="imagesDisplay">
                 <div className='ImageEditForm-original'>
+                    {/* <img
+                        id="original-image"
+                        src={url}
+                        alt={title}
+                        onLoad={imageIsLoaded}
+                        // must be set before image loads
+                        crossOrigin="anonymous"
+                        </img>
+                    > */}
                     <canvas
                         id="original-image"
-                        width={Math.floor(originalImage.width)}
-                        height={Math.floor(originalImage.height)}
+                        width={originalImage.width}
+                        height={originalImage.height}
                     />
 
                 </div>
-                <div className='ImageEditForm-edit'>
-                    <EditedImageCanvas
-                        width={Math.floor(originalImage.width)}
-                        height={Math.floor(originalImage.height)}
-                    />
-                </div>
+                <EditedImageCanvas width={nWidth/(dWidthRatio||1)} height={nHeight/(dHeightRatio||1)} />
             </div>
         </div>
     );

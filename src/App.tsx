@@ -37,7 +37,7 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [imagesData, setImagesData] = useState<imagesI[]>([]);
   console.log("App rendered");
-  console.log("What is imagesData?", imagesData);
+  //console.log("What is imagesData?", imagesData);
 
   //TODO: rename onmount
   useEffect(function getImagesDataOnMount() {

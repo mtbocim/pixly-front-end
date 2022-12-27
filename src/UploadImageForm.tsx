@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Card, CardBody, CardTitle, CardText } from "reactstrap";
+import { Card, CardBody, CardText } from "reactstrap";
 
 interface FormDataI {
     title: string;
@@ -36,7 +36,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
         }
     );
 
-    const [selectedFile, setSelectedFile] = useState<File|''>('');
+    const [selectedFile, setSelectedFile] = useState<File | ''>('');
     const [errors, setErrors] = useState();
 
     const navigate = useNavigate();
@@ -52,13 +52,13 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
         }));
     }
 
-    function handleFileSelect(evt:React.ChangeEvent<HTMLInputElement>){
+    function handleFileSelect(evt: React.ChangeEvent<HTMLInputElement>) {
         console.log("what is file stuff", evt.target.files)
         //TODO: type this
         setSelectedFile(evt.target.files[0])
     }
 
-    const formKeys:string[] = Object.keys(formData);
+    const formKeys: string[] = Object.keys(formData);
     const isDisabled = formKeys.some(key => formData[key as keyof FormDataI] === '')
 
     /**
@@ -73,7 +73,7 @@ function UploadImageForm({ onSubmit }: { onSubmit: Function }) {
             navigate('/');
             console.log("success, result is", result);
         }
-        catch (err:any) {
+        catch (err: any) {
 
             //console.log("err>>>>>>>>>>>>", err);
             setErrors(err.message)
